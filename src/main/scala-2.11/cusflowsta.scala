@@ -16,14 +16,14 @@ object CusFlowStA {
                     .withColumnRenamed("_c0", "date")
                     .withColumnRenamed("_c1", "value")
                     .as[User]
-                    .map(x => User(x.data.split(" ").apply(0), x.value))
+                    .map(x => User(x.date.toString.split(" ").apply(0), x.value))
                     .groupBy("date").avg("value").sort("date")
 
         val arr = dsa.select("avg(value)").as[Double].collect
-        val dif = (arr.drop(1) ++: arr.head()).diff(arr).dropRight(1)
-        dif.flatmap(x => if (x * 0.2 > 
+        val dif = {arr.tail :+ arr.head}.diff(arr).dropRight(1)                 // <- diff return empty
+        dif.flatMap(x => if (x * 0.2 > 
             dif(if (dif.indexOf(x) == 0) 0 else dif.indexOf(x) - 1 )) 
-            (x, "x") else (x, "o"))
+            (x, "x") else (x, "o"))                                             // <- type miss match
 
         dif.toList.toDS.write.json(root + args(2))
         

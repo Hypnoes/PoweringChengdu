@@ -1,11 +1,11 @@
 import scala.math.random
 import org.apache.spark.sql.SparkSession
 
-object SparkPi {
+object PoweringCHD {
     def main(args: Array[String]): Unit = {
         val spark = SparkSession
             .builder
-            .appName("Spark Pi")
+            .appName(s"${this.getClass.getSimpleName}")
             .getOrCreate()
 
         val slices = if (args.length > 0) args(0).toInt else 2
