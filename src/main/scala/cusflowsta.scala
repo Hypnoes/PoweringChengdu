@@ -25,7 +25,7 @@ object CusFlowStA {
         val dif = {arr.tail :+ arr.head}.diff(arr).dropRight(1)                 // <- diff return empty
         dif.map(x => if (x * 0.2 > 
             dif(if (dif.indexOf(x) == 0) 0 else dif.indexOf(x) - 1 )) 
-            (x, "x") else (x, "o"))                                             // <- type miss match
+            (x, "x") else (x, "o"))
 
         dif.toList.toDS.write.json(root + args(2))
         
