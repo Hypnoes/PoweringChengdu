@@ -1,8 +1,10 @@
+package project.utils
+
 import scala.language.implicitConversions
 import org.apache.spark.sql.SparkSession
 
 object CusFlowStA {
-    def main(args: Array[String]): Unit = {
+    def run(args: Array[String]): Unit = {
         val spark = SparkSession
                     .builder
                     .appName(s"${this.getClass.getSimpleName}")
@@ -21,7 +23,7 @@ object CusFlowStA {
 
         val arr = dsa.select("avg(value)").as[Double].collect
         val dif = {arr.tail :+ arr.head}.diff(arr).dropRight(1)                 // <- diff return empty
-        dif.flatMap(x => if (x * 0.2 > 
+        dif.map(x => if (x * 0.2 > 
             dif(if (dif.indexOf(x) == 0) 0 else dif.indexOf(x) - 1 )) 
             (x, "x") else (x, "o"))                                             // <- type miss match
 

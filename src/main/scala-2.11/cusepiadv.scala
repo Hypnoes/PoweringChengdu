@@ -1,3 +1,5 @@
+package project.utils
+
 import org.apache.spark.ml.Pipeline
 import org.apache.spark.ml.evaluation.RegressionEvaluator
 import org.apache.spark.ml.feature.VectorIndexer
@@ -6,7 +8,7 @@ import org.apache.spark.ml.regression.{ GBTRegressionModel, GBTRegressor }
 import org.apache.spark.sql.SparkSession
 
 object CusEpPlA {
-    def main(args: Array[String]): Unit = {
+    def run(args: Array[String]): Unit = {
         val spark = SparkSession
             .builder
             .appName(s"${this.getClass.getSimpleName}")

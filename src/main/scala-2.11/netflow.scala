@@ -1,8 +1,10 @@
+package project.utils
+
 import org.apache.spark.sql
 import org.apache.spark.sql._
 
-object Liuliang {
-    def main(args: Array[String]): Unit = {
+object NetFlow {
+    def run(args: Array[String]): Unit = {
         val spark= SparkSession
             .builder
             .appName(s"${this.getClass.getSimpleName}")
