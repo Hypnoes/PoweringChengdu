@@ -2,7 +2,6 @@ package project.utils
 
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.ml.clustering.KMeans
-import org.apache.spark.ml.linalg.Vectors
 
 object CusModelCluster {
     def run(args: Array[String]): Unit = {
@@ -17,15 +16,18 @@ object CusModelCluster {
             val df = spark.read.format("libsvm").load(root + "SVM_Data/" +input)
             val kmm = new KMeans().setK(3)
             val model = kmm.fit(df)
-            val ce = model.clusterCenters
+            val ce = model.clusterCenters.map(item => bc(item)).toList
+            val centerDS = spark.createDataset(ce)
             
-            model.transform(ce).write
+            model.transform(centerDS).write
                 .json(root+ "out/" + input.split("svm")(0) + "c")
             model.transform(df).write
                 .json(root+ "out/" + input.split("svm")(0) + "a")
         })
-        
+
         spark.stop()
     }
+
+    case class bc (clusterCenters: org.apache.spark.ml.linalg.Vector)
 }
 
