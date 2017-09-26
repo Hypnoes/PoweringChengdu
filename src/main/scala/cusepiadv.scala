@@ -8,16 +8,14 @@ import org.apache.spark.ml.regression.{ GBTRegressionModel, GBTRegressor }
 import org.apache.spark.sql.SparkSession
 
 object CusEpPlA {
-    def run(args: Array[String]): Unit = {
+    def run(input:String, output:String): Unit = {
         val spark = SparkSession
             .builder
             .appName(s"${this.getClass.getSimpleName}")
             .getOrCreate()
         import spark.implicits._
-
-        val root = "hdfs://10.170.31.120:9000/user/hypnoes/"
         
-        val df = spark.read.csv(root + args(1))
+        val df = spark.read.csv(input)
         
         val featureIndexer = new VectorIndexer()
             .setInputCol("features")
@@ -39,7 +37,7 @@ object CusEpPlA {
 
         val predictions = model.transform(testData)
 
-        predictions.select("prediction", "label", "features").write.csv(root + args(2))
+        predictions.select("prediction", "label", "features").write.csv(arg(2))
 
         val evaluator = new RegressionEvaluator()
             .setLabelCol("label")
