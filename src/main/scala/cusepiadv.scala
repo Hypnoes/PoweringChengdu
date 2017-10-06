@@ -37,7 +37,7 @@ object CusEpPlA {
 
         val predictions = model.transform(testData)
 
-        predictions.select("prediction", "label", "features").write.csv(arg(2))
+        predictions.select("prediction", "label", "features").write.csv(output)
 
         val evaluator = new RegressionEvaluator()
             .setLabelCol("label")

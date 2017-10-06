@@ -11,7 +11,7 @@ object CusModelCluster {
             .getOrCreate()
         import spark.implicits._
 
-        val df = spark.read.format("libsvm").load(input)
+        val df = spark.read.csv(input)
         val kmm = new KMeans().setK(3)
         val model = kmm.fit(df)
         val ce = model.clusterCenters.map(item => bc(item)).toList

@@ -27,10 +27,10 @@ object CusFlowStA {
             (x, "x") else (x, "o"))
 
         dif.toList.toDS.write.json(output)
-        
+
         spark.stop()
     }
-            
+
     implicit def toTime(stringDate: String): java.sql.Date = {
         val sdf = new java.text.SimpleDateFormat("yyyy/MM/dd")    
         return new java.sql.Date(sdf.parse(stringDate).getTime())
