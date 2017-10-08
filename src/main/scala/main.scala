@@ -1,16 +1,24 @@
 package project
+{
+    import utils._
 
-import utils._
+    object Main {
+        def main(args: Array[String]): Unit = {
+            val (cmd, input, output) = (args(1),args(2),args(3))
 
-object Main {
-    def main(args: Array[String]): Unit = {
-        val (cmd, input, output) = args(1,2,3)
+            cmd match {
+                case "netflow" | "cusmoc" | "cusflowsta" | "cusepiadv"
+                    => runJobs(cmd).run(input, output)
+                case _
+                    => println("[ERROR]: No such job.")
+            }
+        }
 
-        cmd match {
-            case "InThisCase"            // << TO DO HERE.
-                => Jobs(cmd).run(input, output)
-            case _
-                => println("[ERROR]: No such job.")
+        def runJobs(cmd: String): Jobs = cmd match {
+            case "netflow"      => NetFlow
+            case "cusmoc"       => CusModelCluster
+            case "cusflowsta"   => CusFlowStA
+            case "cusepiadv"    => CusEpPlA
         }
     }
 }

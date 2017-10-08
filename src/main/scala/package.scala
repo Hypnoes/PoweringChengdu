@@ -1,3 +1,4 @@
-package project
-
-package object utils
+package project 
+{
+    package utils { }
+}
