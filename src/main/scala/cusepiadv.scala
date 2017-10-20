@@ -13,7 +13,7 @@ package project.utils
                 .builder
                 .appName(s"${this.getClass.getSimpleName}")
                 .getOrCreate()
-            import spark.implicits._
+            //import spark.implicits._
             
             val df = spark.read.csv(input)
             

@@ -4,7 +4,7 @@ package project
 
     object Main {
         def main(args: Array[String]): Unit = {
-            val (cmd, input, output) = (args(1),args(2),args(3))
+            val (cmd, input, output) = (args(0),args(1),args(2))
 
             cmd match {
                 case "netflow" | "cusmoc" | "cusflowsta" | "cusepiadv"
