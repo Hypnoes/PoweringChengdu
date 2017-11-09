@@ -1,6 +1,5 @@
 package project.utils
 {
-    import scala.language.implicitConversions
     import org.apache.spark.sql.SparkSession
 
     case object CusFlowStA extends Jobs{
@@ -17,7 +16,7 @@ package project.utils
                         .withColumnRenamed("_c0", "date")
                         .withColumnRenamed("_c1", "value")
                         .as[User]
-                        .map(x => User(x.date.toString.split(" ").apply(0), x.value))
+                        .map(x => User(Convert.toDate(x.date.toString.split(" ").apply(0)), x.value))
                         .groupBy("date").avg("value").sort("date")
 
             val arr = dsa.select("avg(value)").as[Double].collect
@@ -29,11 +28,6 @@ package project.utils
             dif.toList.toDS.write.json(output)
 
             spark.stop()
-        }
-
-        implicit def toTime(stringDate: String): java.sql.Date = {
-            val sdf = new java.text.SimpleDateFormat("yyyy/MM/dd")    
-            return new java.sql.Date(sdf.parse(stringDate).getTime())
         }
 
         case class User (date: java.sql.Date, value: Double)

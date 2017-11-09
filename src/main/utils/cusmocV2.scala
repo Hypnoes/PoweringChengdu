@@ -1,7 +1,5 @@
 package project.utils
 {
-    import scala.language.implicitConversions
-
     import org.apache.spark.sql.SparkSession
     import org.apache.spark.ml.clustering.KMeans
     import org.apache.spark.ml.linalg.Vectors
@@ -20,7 +18,7 @@ package project.utils
                                 "DATA_POINT_FLAG", "DATA_WHOLE_FLAG")
 
             val fetSeq = raw.collect.map(x => Vectors.dense(x.toSeq.toArray.map(_.toString.toDouble))).toSeq
-            val lebSeq = df.select("ID", "DATA_DATE").as[(String, String)].map(x => (x._1, toDate(x._2))).toDF("id", "date").as[Leab].collect.toSeq
+            val lebSeq = df.select("ID", "DATA_DATE").as[(String, String)].map(x => (x._1, Convert.toDate(x._2))).toDF("id", "date").as[Leab].collect.toSeq
             val tabSeq = lebSeq.zip(fetSeq).zipWithIndex
             val tab = spark.createDataset(tabSeq.map(x => Powertable(x._2, x._1._1.id, x._1._1.date, x._1._2)))
 
@@ -43,12 +41,7 @@ package project.utils
 
             spark.stop()
         }
-
-        implicit def toDate(stringDate: String): java.sql.Date = {
-            val sdf = new java.text.SimpleDateFormat("yyyy/MM/dd")    
-            return new java.sql.Date(sdf.parse(stringDate).getTime())
-        }
-
+        
         case class Powertable (key: Int, id: String, date: java.sql.Date, features: org.apache.spark.ml.linalg.Vector)
         case class Leab (id: String, date: java.sql.Date)
     }
