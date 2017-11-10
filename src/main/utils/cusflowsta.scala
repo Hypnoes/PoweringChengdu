@@ -2,7 +2,7 @@ package project.utils
 {
     import org.apache.spark.sql.SparkSession
 
-    case object CusFlowStA extends Jobs{
+    case object CusFlowStA extends Jobs {
         override def run(input:String, output:String): Unit = {
             val spark = SparkSession
                 .builder
@@ -10,10 +10,10 @@ package project.utils
                 .getOrCreate()
             import spark.implicits._
 
-            val df = spark.read.csv(input)
+            val df = spark.read.options(Map("seq" -> "\001")).csv(input)
 
-            val dsa = df.select($"_c0", $"_c1".cast("double"))
-                        .withColumnRenamed("_c0", "date")
+            val dsa = df.select($"_c2", $"_c1".cast("double"))
+                        .withColumnRenamed("_c2", "date")
                         .withColumnRenamed("_c1", "value")
                         .as[User]
                         .map(x => User(Convert.toDate(x.date.toString.split(" ").apply(0)), x.value))
@@ -31,5 +31,26 @@ package project.utils
         }
 
         case class User (date: java.sql.Date, value: Double)
+    }
+
+    case object CusFlowStA_V2 extends Jobs {
+        override def run(input: String, output: String): Unit = {
+            val spark = SparkSession
+                        .build
+                        .appName(s"${this.getClass.getSimpleName}")
+                        .getOrCreate()
+            import spark.implicits._
+
+            val df = spark.read.options(Map("seq" -> "\001")).csv(input)
+
+            val trans = df.select($"_c2", $"_c1".cast("double"))
+                            .withColumnRenamed("_c2", "date")
+                            .withColumnRenamed("_c1", "value")
+                            .as[User]
+                            .map(x -> User(Convert.toDate(x.date), x.value))
+                            .groupBy("date").avg("")
+
+            spark.stop
+        }
     }
 }
